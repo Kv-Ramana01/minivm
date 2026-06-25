@@ -20,10 +20,34 @@ impl VM {
         }
     }
 
-    pub fn execute(&mut self, op:Op) {
+    pub fn execute(&mut self, op:Op) -> Result<(), String> {
         match op {
             Op::Push(value) => {
                 self.stack.push(value);
+                Ok(())
+            }
+
+            Op::Pop => {
+                self.pop_stack()?;
+                Ok(())
+            }
+
+            Op::Dup => {
+                let val = self.pop_stack()?;
+                self.stack.push(val);
+                self.stack.push(val);
+
+                Ok(())
+            }
+
+            Op::Swap => {
+                let val1 = self.pop_stack()?;
+                let val2 = self.pop_stack()?;
+
+                self.stack.push(val1);
+                self.stack.push(val2);
+
+                Ok(())
             }
 
             Op::Add => {
@@ -31,18 +55,22 @@ impl VM {
                 let a = self.pop_stack()?;
 
                 self.stack.push(a+b);
+                Ok(())
             }
             
             Op::Print => {
-                let value = self.stack.pop().unwrap();
+                let value = self.pop_stack()?;
                 println!("{}",value);
+                Ok(())
             }
 
             Op::Halt => {
                 println!("Halt");
+                Ok(())
             }
             _=> {
                 println!("Instruction not implemented yet");
+                Ok(())
             }
         }
     }
