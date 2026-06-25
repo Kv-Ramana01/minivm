@@ -13,6 +13,13 @@ impl VM {
         }
     }
 
+    fn pop_stack(&mut self) -> Result<i64, String> {
+        match self.stack.pop() {
+            Some(value) => Ok(value),
+            None => Err("Stack underflow".to_string()),
+        }
+    }
+
     pub fn execute(&mut self, op:Op) {
         match op {
             Op::Push(value) => {
@@ -20,8 +27,8 @@ impl VM {
             }
 
             Op::Add => {
-                let b = self.stack.pop().unwrap();
-                let a = self.stack.pop().unwrap();
+                let b = self.pop_stack()?;
+                let a = self.pop_stack()?;
 
                 self.stack.push(a+b);
             }
