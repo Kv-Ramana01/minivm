@@ -57,6 +57,53 @@ impl VM {
                 self.stack.push(a+b);
                 Ok(())
             }
+
+            Op::Sub => {
+                let b = self.pop_stack()?;
+                let a = self.pop_stack()?;
+
+                self.stack.push(a - b);
+                Ok(())
+            }
+
+            Op::Mul => {
+                let b = self.pop_stack()?;
+                let a = self.pop_stack()?;
+
+                self.stack.push(a * b);
+                Ok(())
+            }
+
+            Op::Div => {
+                let b = self.pop_stack()?;
+                let a = self.pop_stack()?;
+
+                if(b == 0) {
+                    return Err("Division by zero".to_string());
+                }
+
+                self.stack.push(a / b);
+                Ok(())
+            }
+
+            Op::Mod => {
+                let b = self.pop_stack()?;
+                let a = self.pop_stack()?;
+
+                if(b == 0) {
+                    return Err("Division by zero".to_string());
+                }
+
+                self.stack.push(a % b);
+                Ok(())
+            }
+
+            Op::Neg => {
+                let mut val = self.pop_stack()?;
+                val = -val;
+                self.stack.push(val);
+                Ok(())
+            }
             
             Op::Print => {
                 let value = self.pop_stack()?;
@@ -66,6 +113,18 @@ impl VM {
 
             Op::Halt => {
                 println!("Halt");
+                Ok(())
+            }
+
+            Op::Store(slot) => {
+                let val = self.pop_stack()?;
+                self.globals[slot as usize] = val;
+                Ok(())
+            }
+
+            Op::Load(slot) => {
+                let val = self.globals[slot as usize];
+                self.stack.push(val);
                 Ok(())
             }
             _=> {

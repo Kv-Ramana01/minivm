@@ -8,10 +8,9 @@ fn main(){
     let mut vm = VM::new();
 
     let program = vec![
-    Op::Push(2),
-    Op::Push(5),
-    Op::Swap,
-    Op::Print,
+    Op::Push(100),
+    Op::Store(0),
+    Op::Load(0),
     Op::Print,
     Op::Halt,
 ];
