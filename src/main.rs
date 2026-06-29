@@ -1,6 +1,8 @@
 mod isa;
 mod vm;
+mod fileio;
 
+use fileio::*;
 use vm::VM;
 use isa::Op;
 
@@ -52,7 +54,10 @@ fn main() -> Result<(), Box<dyn Error>>{
 
     let bytecode = encode_program(&program);
 
-    let instructions = decode_program(&bytecode)?;
+    write_bytecode("program.tbc", &bytecode)?;
+
+    let bytes = read_bytecode("program.tbc")?;
+    let instructions = decode_program(&bytes)?;
     for instruction in instructions {
         if let Err(error) = vm.execute(instruction) {
             println!("VM Error: {}",error);
@@ -67,10 +72,9 @@ fn main() -> Result<(), Box<dyn Error>>{
     //         break;
     //     }
     // }
+    //     let bytes = Op::Push(10).encode();
+    // println!("{:?}", bytes);
 
-//     let bytes = Op::Push(10).encode();
-
-// println!("{:?}", bytes);
-Ok(())
+    Ok(())
 
 }
