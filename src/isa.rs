@@ -91,7 +91,7 @@ impl Op {
                 if bytes.len() < 9 {
                     return Err("Truncated bytecode: Missing 8-byte value for the push operation".to_string());
                 }
-                let raw_bytes: [u8; 8] = bytes[1..9].try_into();
+                let raw_bytes: [u8; 8] = bytes[1..9].try_into().unwrap();
                 let value = i64::from_le_bytes(raw_bytes);
                 Ok((Op::Push(value), 9))
             }
