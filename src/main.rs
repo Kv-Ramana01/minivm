@@ -1,10 +1,12 @@
 mod isa;
 mod vm;
 mod fileio;
+mod assembler;
 
 use fileio::*;
 use vm::VM;
 use isa::Op;
+use assembler::assemble;
 
 use std::error::Error;
 
@@ -44,13 +46,16 @@ fn encode_program(program: &[Op]) -> Vec<u8> {
 fn main() -> Result<(), Box<dyn Error>>{
     let mut vm = VM::new();
 
-    let program = vec![
-    Op::Push(100),
-    Op::Push(20),
-    Op::Add,
-    Op::Print,
-    Op::Halt,
-];
+//     let program = vec![
+//     Op::Push(100),
+//     Op::Push(20),
+//     Op::Add,
+//     Op::Print,
+//     Op::Halt,
+// ];
+    let source = read_source("program.tasm")?;
+    println!("{:?}", source);
+    let program = assemble(&source)?;
 
     let bytecode = encode_program(&program);
 

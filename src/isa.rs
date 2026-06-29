@@ -46,7 +46,7 @@ impl Op {
 
             Op::Load(index)  => {
                 let mut bytes = Vec::with_capacity(2);
-                bytes.push(0x20);
+                bytes.push(0x40);
                 let ser_bytes = index.to_le_bytes();
                 bytes.extend(ser_bytes);
                 bytes
@@ -54,7 +54,7 @@ impl Op {
             Op::Store(index) => {
                  let mut bytes = Vec::with_capacity(2);
 
-                bytes.push(0x21);
+                bytes.push(0x41);
                 let ser_bytes = index.to_le_bytes();
                 bytes.extend(ser_bytes);
                 bytes
@@ -62,7 +62,7 @@ impl Op {
 
             // System Operations
             Op::Print => vec![0x30],
-            Op::Halt  => vec![0x00],
+            Op::Halt  => vec![0xFF],
         }
     }
 
@@ -86,7 +86,7 @@ impl Op {
             0x15 => Ok((Op::Neg, 1)),
 
             0x30 => Ok((Op::Print, 1)),
-            0x00 => Ok((Op::Halt, 1)),
+            0xFF => Ok((Op::Halt, 1)),
             0x01 => { 
                 if bytes.len() < 9 {
                     return Err("Truncated bytecode: Missing 8-byte value for the push operation".to_string());
@@ -95,13 +95,13 @@ impl Op {
                 let value = i64::from_le_bytes(raw_bytes);
                 Ok((Op::Push(value), 9))
             }
-            0x20 => { 
+            0x40 => { 
                 if bytes.len() < 2 {
                     return Err("Truncated bytecode: Missing slot index for LOAD oepration".to_string());
                 }
                 Ok((Op::Load(bytes[1]),2))
              }
-            0x21 => { 
+            0x41 => { 
                 if bytes.len() < 2 {
                     return Err("Truncated bytecode: Missing slot index for STORE oepration".to_string());
                 }
