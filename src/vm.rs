@@ -13,6 +13,10 @@ impl VM {
         }
     }
 
+    pub fn stack(&self) -> &[i64] {
+        &self.stack
+    }
+
     fn pop_stack(&mut self) -> Result<i64, String> {
         match self.stack.pop() {
             Some(value) => Ok(value),
@@ -78,7 +82,7 @@ impl VM {
                 let b = self.pop_stack()?;
                 let a = self.pop_stack()?;
 
-                if(b == 0) {
+                if b == 0 {
                     return Err("Division by zero".to_string());
                 }
 
@@ -90,7 +94,7 @@ impl VM {
                 let b = self.pop_stack()?;
                 let a = self.pop_stack()?;
 
-                if(b == 0) {
+                if b == 0 {
                     return Err("Division by zero".to_string());
                 }
 
@@ -127,10 +131,10 @@ impl VM {
                 self.stack.push(val);
                 Ok(())
             }
-            _=> {
-                println!("Instruction not implemented yet");
-                Ok(())
-            }
+            // _ => {
+            //     println!("Instruction not implemented yet");
+            //     Ok(())
+            // }
         }
     }
 }
